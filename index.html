@@ -194,6 +194,13 @@
   }
   .intro-text h2 .sparkle { width: 26px; height: 26px; }
   .intro-text p { font-size: 1rem; font-style: italic; line-height: 1.7; max-width: 440px; text-shadow: 0 1px 4px rgba(0,60,140,.45); }
+  .intro-text .about-sub {
+    font-size: .95rem; font-style: italic; font-weight: 600; letter-spacing: .04em;
+    margin: 14px 0 8px; text-shadow: 0 1px 4px rgba(0,60,140,.5);
+  }
+  .intro-text p + p { margin-top: 10px; }
+  .intro-text p.tagline + .about-sub + p { margin-top: 0; }
+
   .card-intro .smile { position: absolute; right: 30px; bottom: 22px; font-style: italic; font-size: 1.4rem; opacity: .9; }
   .card-intro .cursor { position: absolute; right: 48px; top: 88px; width: 30px; filter: drop-shadow(1px 2px 2px rgba(0,0,0,.4)); }
 
@@ -370,16 +377,8 @@
     box-shadow: 0 6px 20px rgba(0,50,130,.55), inset 0 0 20px rgba(255,255,255,.6);
     display: flex; align-items: center; justify-content: center;
   }
-  .orb .flag {
-    width: 52px; height: 52px; transform: perspective(120px) rotateY(-14deg) rotate(-6deg);
-    display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,.35));
-  }
-  .orb .flag i { border-radius: 40% 12% 12% 12%; }
-  .orb .flag i:nth-child(1) { background: #f35325; }
-  .orb .flag i:nth-child(2) { background: #81bc06; }
-  .orb .flag i:nth-child(3) { background: #05a6f0; }
-  .orb .flag i:nth-child(4) { background: #ffba08; }
+  .orb { overflow: hidden; }
+  .orb img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 900px) {
@@ -643,19 +642,14 @@
           </div>
           <div class="intro-text">
             <h2><span class="sparkle"></span>you've found me</h2>
-            <p>you weren't supposed to find anything important here.<br>anyway, welcome.A little about me.
-
-Hey, I'm Nael. I'm currently in 11th grade, and honestly, school isn't really my thing. Let's just say we don't have the best relationship.
-
-I'm into films, music, video games, and pretty much anything that manages to catch my curiosity. I tend to get interested in random things, spend hours exploring them, and then move on to something completely different.
-
-I especially enjoy watching films. There's something about watching people unravel for two hours that I find oddly fascinating. Maybe it's the stories, the characters, or just the feeling of getting lost in another world for a while. Whatever it is, movies have always been a way for me to disconnect from the real one.
-
-I'd say I'm more of a jack of all trades, master of none. I like knowing a little about a lot of things, even if I never really master any of them.
-
-I'm not particularly good at describing myself, so I guess this website does a better job of introducing me than I ever could.
-
-And one last thing: I didn't use AI to write this. It's all me, every word of it.</p>
+            <p class="tagline">you weren't supposed to find anything important here.<br>anyway, welcome.</p>
+            <h3 class="about-sub">A little about me</h3>
+            <p>Hey, I'm Nael. I'm currently in 11th grade, and honestly, school isn't really my thing. Let's just say we don't have the best relationship.</p>
+            <p>I'm into films, music, video games, and pretty much anything that manages to catch my curiosity. I tend to get interested in random things, spend hours exploring them, and then move on to something completely different.</p>
+            <p>I especially enjoy watching films. There's something about watching people unravel for two hours that I find oddly fascinating. Maybe it's the stories, the characters, or just the feeling of getting lost in another world for a while. Whatever it is, movies have always been a way for me to disconnect.</p>
+            <p>I'd say I'm more of a jack of all trades, master of none. I like knowing a little about a lot of things, even if I never really master any of them.</p>
+            <p>I'm not particularly good at describing myself, so I guess this website does a better job of introducing me than I ever could.</p>
+            <p>And one last thing: I didn't use AI to write this. It's all me, every word of it.</p>
           </div>
           <svg class="cursor" viewBox="0 0 24 32" aria-hidden="true">
             <path d="M2 1 L2 24 L8 18 L12.5 29 L16 27.5 L11.5 17 L20 17 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/>
@@ -788,7 +782,7 @@ And one last thing: I didn't use AI to write this. It's all me, every word of it
   </script>
 
   <!-- windows orb -->
-  <div class="orb"><div class="flag"><i></i><i></i><i></i><i></i></div></div>
+  <div class="orb"><img src="https://i.pinimg.com/736x/a8/63/21/a8632125c8d12567cc327fcfedf4ec71.jpg" alt="Nael" referrerpolicy="no-referrer"></div>
 
   <script>
     // extra bubbles that rise up the screen
