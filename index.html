@@ -957,5 +957,402 @@
       }
     })();
   </script>
+
+  <!-- ============================================================
+       FRUTIGER AERO CURSOR + UNIVERSAL WORLD CLOCK
+       Isolated additions: existing site styles and behavior untouched.
+       ============================================================ -->
+  <style>
+    /* Custom cursor: desktop/fine pointers only; never captures input. */
+    @media (hover: hover) and (pointer: fine) {
+      html.aero-cursor-enabled,
+      html.aero-cursor-enabled body,
+      html.aero-cursor-enabled body * {
+        cursor: none !important;
+      }
+      #aeroCursor {
+        display: block;
+      }
+    }
+    #aeroCursor {
+      display: none;
+      position: fixed;
+      z-index: 2147483000;
+      left: 0;
+      top: 0;
+      width: 38px;
+      height: 48px;
+      pointer-events: none;
+      transform: translate3d(-100px, -100px, 0);
+      will-change: transform;
+      filter: drop-shadow(0 3px 5px rgba(0, 35, 105, .48))
+              drop-shadow(0 0 7px rgba(160, 235, 255, .8));
+      transition: filter .18s ease;
+    }
+    #aeroCursor svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    #aeroCursor.is-hovering {
+      filter: drop-shadow(0 4px 7px rgba(0, 35, 105, .5))
+              drop-shadow(0 0 12px rgba(190, 250, 255, 1));
+    }
+    #aeroCursor.is-hovering svg { transform: scale(1.12); }
+    #aeroCursor svg { transition: transform .18s ease; }
+
+    /* Vista-inspired clock pill; fixed overlay so page layout is unchanged. */
+    #aeroWorldClock {
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      z-index: 10000;
+      width: min(340px, calc(100vw - 28px));
+      padding: 12px 16px 11px;
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,.9);
+      border-radius: 30px;
+      background:
+        radial-gradient(ellipse at 18% 0%, rgba(255,255,255,.65), transparent 48%),
+        linear-gradient(145deg, rgba(5,139,255,.94), rgba(0,83,205,.91) 52%, rgba(42,174,255,.94));
+      box-shadow:
+        0 7px 22px rgba(0,40,120,.42),
+        0 0 13px rgba(150,225,255,.75),
+        inset 0 2px 3px rgba(255,255,255,.95),
+        inset 0 -9px 18px rgba(0,45,150,.3);
+      backdrop-filter: blur(12px) saturate(1.4);
+      -webkit-backdrop-filter: blur(12px) saturate(1.4);
+      font-family: "Segoe UI", Frutiger, Tahoma, Verdana, sans-serif;
+      text-shadow: 0 1px 4px rgba(0,40,120,.55);
+      isolation: isolate;
+    }
+    #aeroWorldClock::before {
+      content: "";
+      position: absolute;
+      inset: 3px 5px auto;
+      height: 45%;
+      border-radius: 26px 26px 60% 60%;
+      background: linear-gradient(180deg, rgba(255,255,255,.38), transparent);
+      pointer-events: none;
+      z-index: -1;
+    }
+    #aeroWorldClock .awc-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    #aeroWorldClock .awc-time {
+      font-size: clamp(1.8rem, 5vw, 2.25rem);
+      line-height: 1.08;
+      font-weight: 300;
+      letter-spacing: .025em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    #aeroWorldClock .awc-date {
+      margin-top: 3px;
+      font-size: .92rem;
+      opacity: .96;
+      white-space: nowrap;
+    }
+    #aeroWorldClock .awc-globe {
+      flex: none;
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.8);
+      background:
+        radial-gradient(circle at 30% 24%, #fff 0 5%, transparent 22%),
+        radial-gradient(circle at 35% 35%, #7ff1a0 0 22%, transparent 23%),
+        radial-gradient(circle at 65% 65%, #37c96a 0 23%, transparent 24%),
+        linear-gradient(145deg, #74d9ff, #0871e6 72%, #0644ad);
+      box-shadow: inset -4px -5px 9px rgba(0,30,120,.45),
+                  inset 2px 2px 5px rgba(255,255,255,.8),
+                  0 0 10px rgba(190,240,255,.85);
+      font-size: 1.35rem;
+    }
+    #aeroWorldClock .awc-zone-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 9px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.35);
+    }
+    #aeroWorldClock .awc-zone-label {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: .76rem;
+      opacity: .95;
+    }
+    #aeroWorldClock .awc-picker {
+      width: 100%;
+      min-width: 0;
+      color: #fff;
+      font: inherit;
+      font-size: .75rem;
+      padding: 5px 9px;
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(0,55,155,.38);
+      box-shadow: inset 0 1px 3px rgba(0,35,100,.25);
+    }
+    #aeroWorldClock .awc-picker::placeholder { color: rgba(255,255,255,.88); }
+    #aeroWorldClock .awc-picker:focus {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(190,240,255,.35), inset 0 1px 3px rgba(0,35,100,.25);
+    }
+    #aeroWorldClock .awc-picker option { color: #12345c; background: #eaf8ff; }
+    #aeroWorldClock .awc-picker-wrap { min-width: 0; flex: 1.2; }
+    #aeroWorldClock .awc-local {
+      flex: none;
+      color: #0752a8;
+      border: 1px solid rgba(255,255,255,.95);
+      border-radius: 13px;
+      padding: 5px 8px;
+      font: 600 .69rem "Segoe UI", Tahoma, sans-serif;
+      white-space: nowrap;
+      background: linear-gradient(180deg, #fff, #bdeaff 55%, #83cfff);
+      box-shadow: 0 2px 6px rgba(0,35,100,.35), inset 0 1px 0 #fff;
+      cursor: pointer;
+    }
+    #aeroWorldClock .awc-local:hover { filter: brightness(1.08); }
+    #aeroWorldClock .awc-local:active { transform: translateY(1px); }
+    @media (max-width: 600px) {
+      #aeroWorldClock {
+        top: 10px;
+        right: 10px;
+        width: min(310px, calc(100vw - 20px));
+        padding: 10px 13px;
+      }
+      #aeroWorldClock .awc-time { font-size: 1.8rem; }
+      #aeroWorldClock .awc-globe { width: 37px; height: 37px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #aeroCursor, #aeroCursor svg { transition: none !important; }
+    }
+  </style>
+
+  <div id="aeroCursor" aria-hidden="true">
+    <svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="awcCursorFill" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset=".22" stop-color="#bdf5ff"/>
+          <stop offset=".52" stop-color="#42baff"/>
+          <stop offset=".78" stop-color="#0877e8"/>
+          <stop offset="1" stop-color="#0646b8"/>
+        </linearGradient>
+        <linearGradient id="awcCursorEdge" x1="0" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset=".45" stop-color="#8ceaff"/>
+          <stop offset="1" stop-color="#0750bd"/>
+        </linearGradient>
+        <linearGradient id="awcCursorShine" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity=".95"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="M4 3 L4 39 L13 30 L20 46 L26 43 L19 27 L34 27 Z"
+            fill="url(#awcCursorFill)" stroke="#064a9f" stroke-width="2.1"
+            stroke-linejoin="round"/>
+      <path d="M6.5 7 L6.5 33 L13.2 26.5 L18 26.8 L31 25.5 Z"
+            fill="url(#awcCursorShine)" opacity=".72"/>
+      <path d="M4.8 4.5 L31.2 26.2 L18.2 26.2 L13 30.2 Z"
+            fill="none" stroke="url(#awcCursorEdge)" stroke-width="1.15"
+            stroke-linejoin="round"/>
+      <path d="M7 7 L7 29" stroke="#fff" stroke-opacity=".9"
+            stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="10" cy="9" r="2.1" fill="#fff" opacity=".9"/>
+    </svg>
+  </div>
+
+  <aside id="aeroWorldClock" aria-label="Universal world clock">
+    <div class="awc-main">
+      <div>
+        <div class="awc-time" id="awcTime" aria-live="off">--:--:--</div>
+        <div class="awc-date" id="awcDate">Loading date…</div>
+      </div>
+      <div class="awc-globe" aria-hidden="true">🌐</div>
+    </div>
+    <div class="awc-zone-row">
+      <span class="awc-zone-label" id="awcZone" title="Detected timezone">Detecting timezone…</span>
+      <button class="awc-local" id="awcLocal" type="button">My Local Time</button>
+    </div>
+    <div class="awc-zone-row">
+      <label class="awc-picker-wrap">
+        <input class="awc-picker" id="awcTimezone" type="search"
+               list="awcTimezoneOptions" placeholder="Search IANA timezones…"
+               autocomplete="off" aria-label="Search and select a timezone">
+        <datalist id="awcTimezoneOptions"></datalist>
+      </label>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* Glossy cursor */
+      var cursor = document.getElementById("aeroCursor");
+      var finePointer = window.matchMedia &&
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+      if (finePointer && cursor) {
+        document.documentElement.classList.add("aero-cursor-enabled");
+        var mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
+        var cursorFrame = 0;
+
+        function moveCursor(event) {
+          mouseX = event.clientX;
+          mouseY = event.clientY;
+          if (!cursorFrame) cursorFrame = requestAnimationFrame(renderCursor);
+        }
+        function renderCursor() {
+          cursorX += (mouseX - cursorX) * 0.34;
+          cursorY += (mouseY - cursorY) * 0.34;
+          cursor.style.transform =
+            "translate3d(" + (cursorX - 4) + "px," + (cursorY - 3) + "px,0)";
+          if (Math.abs(mouseX - cursorX) > 0.15 || Math.abs(mouseY - cursorY) > 0.15) {
+            cursorFrame = requestAnimationFrame(renderCursor);
+          } else {
+            cursorFrame = 0;
+          }
+        }
+        document.addEventListener("pointermove", moveCursor, { passive: true });
+        document.addEventListener("pointerover", function (event) {
+          if (event.target && event.target.closest &&
+              event.target.closest("a, button, input, select, textarea, [role='button'], label")) {
+            cursor.classList.add("is-hovering");
+          }
+        }, true);
+        document.addEventListener("pointerout", function (event) {
+          if (event.target && event.target.closest &&
+              event.target.closest("a, button, input, select, textarea, [role='button'], label")) {
+            cursor.classList.remove("is-hovering");
+          }
+        }, true);
+        document.addEventListener("pointerdown", function () {
+          cursor.style.filter = "drop-shadow(0 1px 3px rgba(0,35,105,.55))";
+        }, true);
+        document.addEventListener("pointerup", function () {
+          cursor.style.filter = "";
+        }, true);
+      }
+
+      /* Universal world clock */
+      var timeNode = document.getElementById("awcTime");
+      var dateNode = document.getElementById("awcDate");
+      var zoneNode = document.getElementById("awcZone");
+      var picker = document.getElementById("awcTimezone");
+      var options = document.getElementById("awcTimezoneOptions");
+      var localButton = document.getElementById("awcLocal");
+      var STORAGE_KEY = "frutigerAeroWorldClock.timeZone";
+      var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+      var activeZone = localZone;
+
+      function getTimeZones() {
+        var zones = [];
+        if (typeof Intl.supportedValuesOf === "function") {
+          try { zones = Intl.supportedValuesOf("timeZone"); } catch (error) {}
+        }
+        if (!zones.length) {
+          zones = [
+            "Africa/Cairo", "Africa/Johannesburg", "America/Anchorage",
+            "America/Argentina/Buenos_Aires", "America/Chicago", "America/Denver",
+            "America/Los_Angeles", "America/Mexico_City", "America/New_York",
+            "America/Sao_Paulo", "Asia/Bangkok", "Asia/Dubai", "Asia/Kolkata",
+            "Asia/Seoul", "Asia/Shanghai", "Asia/Singapore", "Asia/Tokyo",
+            "Australia/Melbourne", "Australia/Sydney", "Europe/Berlin",
+            "Europe/London", "Europe/Paris", "Pacific/Auckland", "UTC"
+          ];
+        }
+        if (zones.indexOf(localZone) === -1) zones.unshift(localZone);
+        if (zones.indexOf("UTC") === -1) zones.push("UTC");
+        return Array.from(new Set(zones)).sort();
+      }
+
+      var allZones = getTimeZones();
+      var fragment = document.createDocumentFragment();
+      allZones.forEach(function (zone) {
+        var option = document.createElement("option");
+        option.value = zone;
+        fragment.appendChild(option);
+      });
+      options.appendChild(fragment);
+
+      function validZone(zone) {
+        if (!zone || typeof zone !== "string") return false;
+        try {
+          new Intl.DateTimeFormat("en-US", { timeZone: zone }).format(new Date());
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function setZone(zone, persist) {
+        if (!validZone(zone)) return;
+        activeZone = zone;
+        picker.value = zone;
+        zoneNode.textContent = zone === localZone ? zone + " · Local" : zone;
+        zoneNode.title = zone;
+        if (persist) {
+          try { localStorage.setItem(STORAGE_KEY, zone); } catch (error) {}
+        }
+        updateClock();
+      }
+
+      function updateClock() {
+        var now = new Date();
+        try {
+          timeNode.textContent = new Intl.DateTimeFormat("en-US", {
+            timeZone: activeZone,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+          }).format(now);
+          dateNode.textContent = new Intl.DateTimeFormat("en-US", {
+            timeZone: activeZone,
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          }).format(now);
+        } catch (error) {
+          setZone(localZone, false);
+        }
+      }
+
+      picker.addEventListener("change", function () {
+        if (validZone(picker.value)) {
+          setZone(picker.value, true);
+        } else {
+          picker.setCustomValidity("Choose a supported IANA timezone from the suggestions.");
+          picker.reportValidity();
+          picker.setCustomValidity("");
+        }
+      });
+      picker.addEventListener("input", function () {
+        if (validZone(picker.value)) setZone(picker.value, true);
+      });
+      localButton.addEventListener("click", function () {
+        setZone(localZone, true);
+      });
+
+      var savedZone = "";
+      try { savedZone = localStorage.getItem(STORAGE_KEY) || ""; } catch (error) {}
+      setZone(validZone(savedZone) ? savedZone : localZone, false);
+      window.setInterval(updateClock, 1000);
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) updateClock();
+      });
+    })();
+  </script>
+
 </body>
 </html>
