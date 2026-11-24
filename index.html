@@ -963,40 +963,6 @@
        Isolated additions: existing site styles and behavior untouched.
        ============================================================ -->
   <style>
-    /* Custom cursor: desktop/fine pointers only; never captures input. */
-    @media (hover: hover) and (pointer: fine) {
-      html.aero-cursor-enabled,
-      html.aero-cursor-enabled body,
-      html.aero-cursor-enabled body * {
-        cursor: none !important;
-      }
-      #aeroCursor {
-        display: block;
-      }
-    }
-    #aeroCursor {
-      display: none;
-      position: fixed;
-      z-index: 2147483000;
-      left: 0;
-      top: 0;
-      width: 38px;
-      height: 48px;
-      pointer-events: none;
-      transform: translate3d(-100px, -100px, 0);
-      will-change: transform;
-      filter: drop-shadow(0 3px 5px rgba(0, 35, 105, .48))
-              drop-shadow(0 0 7px rgba(160, 235, 255, .8));
-      transition: filter .18s ease;
-    }
-    #aeroCursor svg { display: block; width: 100%; height: 100%; overflow: visible; }
-    #aeroCursor.is-hovering {
-      filter: drop-shadow(0 4px 7px rgba(0, 35, 105, .5))
-              drop-shadow(0 0 12px rgba(190, 250, 255, 1));
-    }
-    #aeroCursor.is-hovering svg { transform: scale(1.12); }
-    #aeroCursor svg { transition: transform .18s ease; }
-
     /* Vista-inspired clock pill; fixed overlay so page layout is unchanged. */
     #aeroWorldClock {
       position: fixed;
@@ -1136,39 +1102,7 @@
     }
   </style>
 
-  <div id="aeroCursor" aria-hidden="true">
-    <svg viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="awcCursorFill" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffffff"/>
-          <stop offset=".22" stop-color="#bdf5ff"/>
-          <stop offset=".52" stop-color="#42baff"/>
-          <stop offset=".78" stop-color="#0877e8"/>
-          <stop offset="1" stop-color="#0646b8"/>
-        </linearGradient>
-        <linearGradient id="awcCursorEdge" x1="0" y1="0" x2="0.9" y2="1">
-          <stop offset="0" stop-color="#ffffff"/>
-          <stop offset=".45" stop-color="#8ceaff"/>
-          <stop offset="1" stop-color="#0750bd"/>
-        </linearGradient>
-        <linearGradient id="awcCursorShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#fff" stop-opacity=".95"/>
-          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path d="M4 3 L4 39 L13 30 L20 46 L26 43 L19 27 L34 27 Z"
-            fill="url(#awcCursorFill)" stroke="#064a9f" stroke-width="2.1"
-            stroke-linejoin="round"/>
-      <path d="M6.5 7 L6.5 33 L13.2 26.5 L18 26.8 L31 25.5 Z"
-            fill="url(#awcCursorShine)" opacity=".72"/>
-      <path d="M4.8 4.5 L31.2 26.2 L18.2 26.2 L13 30.2 Z"
-            fill="none" stroke="url(#awcCursorEdge)" stroke-width="1.15"
-            stroke-linejoin="round"/>
-      <path d="M7 7 L7 29" stroke="#fff" stroke-opacity=".9"
-            stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="10" cy="9" r="2.1" fill="#fff" opacity=".9"/>
-    </svg>
-  </div>
+  
 
   <aside id="aeroWorldClock" aria-label="Universal world clock">
     <div class="awc-main">
@@ -1195,53 +1129,6 @@
   <script>
     (function () {
       "use strict";
-
-      /* Glossy cursor */
-      var cursor = document.getElementById("aeroCursor");
-      var finePointer = window.matchMedia &&
-        window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-      if (finePointer && cursor) {
-        document.documentElement.classList.add("aero-cursor-enabled");
-        var mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
-        var cursorFrame = 0;
-
-        function moveCursor(event) {
-          mouseX = event.clientX;
-          mouseY = event.clientY;
-          if (!cursorFrame) cursorFrame = requestAnimationFrame(renderCursor);
-        }
-        function renderCursor() {
-          cursorX += (mouseX - cursorX) * 0.34;
-          cursorY += (mouseY - cursorY) * 0.34;
-          cursor.style.transform =
-            "translate3d(" + (cursorX - 4) + "px," + (cursorY - 3) + "px,0)";
-          if (Math.abs(mouseX - cursorX) > 0.15 || Math.abs(mouseY - cursorY) > 0.15) {
-            cursorFrame = requestAnimationFrame(renderCursor);
-          } else {
-            cursorFrame = 0;
-          }
-        }
-        document.addEventListener("pointermove", moveCursor, { passive: true });
-        document.addEventListener("pointerover", function (event) {
-          if (event.target && event.target.closest &&
-              event.target.closest("a, button, input, select, textarea, [role='button'], label")) {
-            cursor.classList.add("is-hovering");
-          }
-        }, true);
-        document.addEventListener("pointerout", function (event) {
-          if (event.target && event.target.closest &&
-              event.target.closest("a, button, input, select, textarea, [role='button'], label")) {
-            cursor.classList.remove("is-hovering");
-          }
-        }, true);
-        document.addEventListener("pointerdown", function () {
-          cursor.style.filter = "drop-shadow(0 1px 3px rgba(0,35,105,.55))";
-        }, true);
-        document.addEventListener("pointerup", function () {
-          cursor.style.filter = "";
-        }, true);
-      }
 
       /* Universal world clock */
       var timeNode = document.getElementById("awcTime");
