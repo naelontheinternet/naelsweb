@@ -920,16 +920,33 @@
           fill = document.getElementById("pFill"),
           cur = document.getElementById("pCur"),
           dur = document.getElementById("pDur"),
-          vol = document.getElementById("pVol");
+          vol = document.getElementById("pVol"),
+          rewind = document.getElementById("pRewind"),
+          skip = document.getElementById("pSkip");
       function fmt(s) { s = Math.floor(s || 0); return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
       a.volume = 0.8;
       var knob = document.getElementById("pKnob");
       var ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l11-6.8a.8.8 0 0 0 0-1.4L9.2 4.5A.8.8 0 0 0 8 5.2z" fill="#fff"/></svg>';
       var ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="5" width="3.8" height="14" rx="1.4" fill="#fff"/><rect x="13.7" y="5" width="3.8" height="14" rx="1.4" fill="#fff"/></svg>';
       vol.style.setProperty("--v", "80%");
-      play.onclick = function () { a.paused ? a.play() : a.pause(); };
-      rewind.onclick = function () { a.currentTime = Math.max(0, (a.currentTime || 0) - 10); };
-      skip.onclick = function () { if (Number.isFinite(a.duration)) a.currentTime = Math.min(a.duration, a.currentTime + 10); };
+      play.onclick = function () {
+        if (a.paused) {
+          var attempt = a.play();
+          if (attempt && typeof attempt.catch === "function") {
+            attempt.catch(function () {
+              document.getElementById("pTitle").textContent = "tap play to start";
+            });
+          }
+        } else {
+          a.pause();
+        }
+      };
+      rewind.onclick = function () {
+        if (Number.isFinite(a.duration)) a.currentTime = Math.max(0, a.currentTime - 10);
+      };
+      skip.onclick = function () {
+        if (Number.isFinite(a.duration)) a.currentTime = Math.min(a.duration, a.currentTime + 10);
+      };
       a.onplay  = function () { box.classList.add("playing");    play.innerHTML = ICON_PAUSE; };
       a.onpause = function () { box.classList.remove("playing"); play.innerHTML = ICON_PLAY; };
       a.onended = function () { a.currentTime = 0; };
