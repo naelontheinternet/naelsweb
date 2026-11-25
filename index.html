@@ -786,7 +786,7 @@
   <div class="page">
 
     <!-- HEADER -->
-    <div class="header-wrap">
+    <div class="header-wrap" id="home">
       <div class="globe"><div class="ball"></div><div class="ring"></div></div>
       <div class="header glass">
         <h1>Nael on the internet</h1>
@@ -794,12 +794,20 @@
       </div>
     </div>
 
+    <nav class="glass site-nav" aria-label="Main menu">
+      <a class="pill" href="#home">Home</a>
+      <a class="pill" href="#about">About</a>
+      <a class="pill" href="#likes">Likes</a>
+      <a class="pill" href="#links">Links</a>
+      <a class="pill" href="#contact">Contact</a>
+    </nav>
+
     <div class="grid">
 
       <!-- LEFT COLUMN -->
       <div class="col">
 
-        <section class="glass card-intro">
+        <section class="glass card-intro" id="about">
           <div class="photo-frame">
             <img src="https://i.pinimg.com/736x/fc/86/15/fc8615ac581b13e9c9fcd82aae23a96f.jpg" alt="Photo" referrerpolicy="no-referrer" onerror="this.style.display='none'">
           </div>
@@ -827,7 +835,7 @@
           <div class="cd"></div>
         </section>
 
-        <section class="glass card-likes">
+        <section class="glass card-likes" id="likes">
           <div class="likes-bg"></div>
           <div class="likes-head">
             <span class="clapper">🎬</span>
@@ -840,12 +848,22 @@
           </ul>
         </section>
 
+              <section class="glass card-contact" id="contact">
+          <h2>Say hi</h2>
+          <p>The easiest way to reach me is through the links on this page.</p>
+          <!-- Want email contact? Add: <a class="pill" href="mailto:you@example.com">Email</a> -->
+          <div class="contact-links">
+            <a class="pill" href="https://open.spotify.com/user/31krnezu2cqzrc7fjnzr577tl7dm" target="_blank" rel="noopener">Spotify</a>
+            <a class="pill" href="https://boxd.it/lduFT" target="_blank" rel="noopener">Letterboxd</a>
+          </div>
+        </section>
+
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="col">
 
-        <div class="folder links">
+        <div class="folder links" id="links">
           <div class="peek-cat">
             <img src="cat-peek.png" alt="" onerror="this.style.display='none'">
           </div>
@@ -1168,6 +1186,89 @@
     #aeroWorldClock { top:8px !important; right:8px !important; }
     #aeroWorldClock.expanded { width:min(260px, calc(100vw - 16px)) !important; }
   }
+
+</style>
+
+  <style>
+/* ===== Frutiger Aero polish: contrast, readable type, nav, new link backgrounds ===== */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+#home, #about, #likes, #links, #contact { scroll-margin-top: 24px; }
+
+/* Deep aqua-blue glass so white text always has strong contrast (about 5:1 or better) */
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0) 45%),
+    linear-gradient(135deg, rgba(8,70,165,.74), rgba(10,95,190,.66) 60%, rgba(6,60,150,.76));
+  text-shadow: 0 1px 3px rgba(0,25,80,.55);
+}
+.glass::before { background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,0)); }
+.glass::after { background: linear-gradient(100deg, transparent, rgba(255,255,255,.16), transparent); }
+.folder .tab {
+  background: linear-gradient(180deg, rgba(30,115,215,.92), rgba(8,70,165,.92));
+  text-shadow: 0 1px 3px rgba(0,25,80,.6);
+}
+.likes-bg { opacity: .3; }
+
+/* Readable type */
+.intro-text h2 { font-size: 1.7rem; }
+.intro-text p { font-size: 1.15rem; font-style: normal; line-height: 1.7; max-width: 52ch; }
+.intro-text .about-sub { font-size: 1.25rem; }
+.card-intro { padding-bottom: 56px; }
+.card-intro .cursor { display: none; }
+.card-bio p { font-size: 1.3rem; font-style: normal; line-height: 1.55; }
+.likes-head h2 { font-size: 1.8rem; }
+.card-likes li { font-size: 1.3rem; font-style: normal; font-weight: 600; }
+.folder .tab { font-size: 1.35rem; }
+.folder.more .tab { font-size: 1.1rem; }
+.link-btn .label { text-shadow: 0 2px 4px rgba(0,25,80,.7); }
+.p-time, .p-artist { font-size: 1rem; }
+.p-seek { font-size: .92rem; }
+#aeroWorldClock .awc-date { font-size: 1rem; }
+#aeroWorldClock .awc-zone-label { font-size: .92rem; }
+#aeroWorldClock .awc-picker { font-size: .92rem; }
+#aeroWorldClock .awc-local { font-size: .88rem; }
+
+/* Pill buttons (nav + contact) */
+.pill {
+  display: inline-block; padding: 10px 24px; border-radius: 999px;
+  color: #fff; text-decoration: none; font-weight: 700; font-size: 1.1rem; letter-spacing: .02em;
+  border: 1.6px solid rgba(255,255,255,.85);
+  background: linear-gradient(180deg, rgba(255,255,255,.38), rgba(255,255,255,.08) 50%, rgba(0,40,120,.3));
+  box-shadow: 0 3px 10px rgba(0,40,110,.4), inset 0 1px 0 rgba(255,255,255,.85);
+  text-shadow: 0 1px 3px rgba(0,25,80,.7);
+  transition: background .2s ease, transform .2s ease;
+}
+.pill:hover { background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.18) 50%, rgba(0,60,150,.25)); transform: translateY(-2px); }
+.pill:focus-visible, .link-btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(0,60,150,.9); }
+
+.site-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 12px 18px; margin: 0 0 26px; border-radius: 999px; }
+.card-contact { padding: 26px 30px; }
+.card-contact h2 { font-size: 1.6rem; font-style: italic; font-weight: 600; margin-bottom: 8px; }
+.card-contact p { font-size: 1.15rem; line-height: 1.6; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+
+/* New link backgrounds (pure CSS, no outside images) */
+.spotify-btn {
+  background:
+    radial-gradient(ellipse 80% 55% at 78% 138%, #5fd13a 0 60%, transparent 61%),
+    radial-gradient(ellipse 45% 60% at 12% 0%, rgba(255,255,255,.5), transparent 70%),
+    linear-gradient(165deg, #0a5cc4 0%, #0e83a6 52%, #12904a 100%);
+}
+.letterboxd-btn {
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 12px, transparent 12px 26px) top / 100% 8px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255,255,255,.75) 0 12px, transparent 12px 26px) bottom / 100% 8px no-repeat,
+    radial-gradient(ellipse 45% 55% at 14% 12%, rgba(255,255,255,.45), transparent 70%),
+    linear-gradient(165deg, #0a3f9c 0%, #1268c4 48%, #1596b8 100%);
+}
+
+@media (max-width: 900px) {
+  .page { padding-top: 64px; }
+  .site-nav { border-radius: 28px; }
+  .pill { padding: 9px 18px; font-size: 1.05rem; }
+  .intro-text p { max-width: none; }
+}
 
 </style>
 
