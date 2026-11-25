@@ -862,9 +862,9 @@
 
               <section class="glass card-contact" id="contact">
           <h2>Say hi</h2>
-          <p>The easiest way to reach me is through the links on this page.</p>
-          <!-- Want email contact? Add: <a class="pill" href="mailto:you@example.com">Email</a> -->
+          <p>The easiest way to reach me is by email, or through the links on this page.</p>
           <div class="contact-links">
+            <a class="pill" href="mailto:nahalmuhammed347@gmail.com">nahalmuhammed347@gmail.com</a>
             <a class="pill" href="https://open.spotify.com/user/31krnezu2cqzrc7fjnzr577tl7dm" target="_blank" rel="noopener">Spotify</a>
             <a class="pill" href="https://boxd.it/lduFT" target="_blank" rel="noopener">Letterboxd</a>
           </div>
@@ -1014,7 +1014,7 @@
   <script>
     // extra bubbles that rise up the screen
     (function () {
-      var count = window.innerWidth < 700 ? 14 : 28;
+      var count = window.innerWidth < 700 ? 6 : 12;
       for (var i = 0; i < count; i++) {
         var b = document.createElement("span");
         var size = 14 + Math.random() * 56;
@@ -1312,6 +1312,44 @@ html { scroll-behavior: smooth; }
 .like-panel:not([hidden]) ~ .like-hint { display: none; }
 @keyframes likeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .like-panel { animation: none; } .chip { transition: none; } }
+
+/* ===== Performance: keep the look, drop the expensive effects ===== */
+/* 1. Live blur behind every panel was the main cost. The glass is already tinted, so it is not needed. */
+.glass, .folder .tab, #aeroWorldClock {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* 2. Shine sweep now moves with transform (GPU) instead of "left" (layout) */
+.glass::after {
+  left: 0; width: 26%;
+  will-change: transform;
+  animation: shineMove 9s ease-in-out infinite;
+}
+@keyframes shineMove {
+  0%, 55% { transform: translateX(-173%) skewX(-20deg); }
+  100%    { transform: translateX(558%) skewX(-20deg); }
+}
+/* 3. Full-screen blend modes and blur filters removed */
+.rays, .rainbow { mix-blend-mode: normal; will-change: opacity, transform; }
+.rainbow { filter: none; }
+/* 4. Water: one layer slides with transform instead of repainting background-position */
+.scene .water { animation: none; }
+.waterflow::before { display: none; }
+.waterflow::after {
+  inset: 0 0 0 -300px; width: auto;
+  background-image: radial-gradient(ellipse 90px 8px at 60% 50%, rgba(255,255,255,.45), transparent 70%);
+  background-size: 300px 80px;
+  will-change: transform;
+  animation: waterSlide 14s linear infinite;
+}
+@keyframes waterSlide { from { transform: translateX(0); } to { transform: translateX(300px); } }
+/* 5. Cheaper bubbles */
+.bubble { box-shadow: inset 0 0 8px rgba(255,255,255,.5); }
+.bubble.rise { will-change: transform; }
+@media (max-width: 900px) { .glass::after { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .glass::after, .waterflow::after, .rays, .rainbow { animation: none !important; }
+}
 </style>
 
   <aside id="aeroWorldClock" aria-label="Universal world clock">
